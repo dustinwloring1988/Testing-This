@@ -1,0 +1,49 @@
+Here are explanations for each command:
+
+1.  `masscan 0.0.0.0/0 -p9100,515 --banners --rate=10000 --open --exclude-file exclude-ips.txt -oG results.txt`:
+    
+    *   `0.0.0.0/0`: Scan the entire internet.
+    *   `-p9100,515`: Scan for ports 9100 and 515.
+    *   `--banners`: Attempt to grab banners from the services running on the open ports.
+    *   `--rate=10000`: Scan at a rate of 10,000 packets per second.
+    *   `--open`: Only show open ports.
+    *   `--exclude-file exclude-ips.txt`: Exclude IP addresses listed in the `exclude-ips.txt` file.
+    *   `-oG results.txt`: Save the results in "grepable" format to a file named `results.txt`.
+2.  `masscan 0.0.0.0/0 -p445 --banners --rate=10000 --open --exclude-file exclude-ips.txt -oG results.txt`:
+    
+    *   This command is similar to the first one, but it only scans for port 445 (Microsoft-DS SMB).
+3.  `masscan 0.0.0.0/0 -p21 --banners --rate=10000 --open --exclude-file exclude-ips.txt -oG results.txt`:
+    
+    *   This command is similar to the first two, but it only scans for port 21 (FTP).
+4.  `masscan 0.0.0.0/0 -p22 --banners --rate=10000 --open --exclude-file exclude-ips.txt -oG results.txt`:
+    
+    *   This command is similar to the first three, but it only scans for port 22 (SSH).
+5.  `nmap -iL results.txt -p 22,21 -sV --script=auth --script-args='userdb=nmap-users.lst,passdb=nmap-passes.lst' -oN output.txt`:
+    
+    *   `-iL results.txt`: Read a list of targets from a file, where each line is an IP address or hostname.
+    *   `-p 22,21`: Scan only ports 22 (SSH) and 21 (FTP).
+    *   `-sV`: Probe open ports to determine service/version information.
+    *   `--script=auth`: Run the "auth" script to test authentication methods.
+    *   `--script-args='userdb=nmap-users.lst,passdb=nmap-passes.lst'`: Provide user and password lists to the "auth" script.
+    *   `-oN output.txt`: Save the results in normal format to a file named `output.txt`.
+6.  `nmap -iL results.txt -sS -Pn -T4 --version-all -oA %h`:
+    
+    *   `-iL results.txt`: Read a list of targets from a file, where each line is an IP address or hostname.
+    *   `-sS`: Perform a stealthy SYN scan.
+    *   `-Pn`: Treat all hosts as online -- skip host discovery.
+    *   \`-
+
+
+## All Commands - Copy and Past at will
+
+masscan 0.0.0.0/0 -p9100,515 --banners --rate=10000 --open --exclude-file exclude-ips.txt -oG results.txt
+
+masscan 0.0.0.0/0 -p445 --banners --rate=10000 --open --exclude-file exclude-ips.txt -oG results.txt
+
+masscan 0.0.0.0/0 -p21 --banners --rate=10000 --open --exclude-file exclude-ips.txt -oG results.txt
+
+masscan 0.0.0.0/0 -p22 --banners --rate=10000 --open --exclude-file exclude-ips.txt -oG results.txt
+
+nmap -iL results.txt -p 22,21 -sV --script=auth --script-args='userdb=nmap-users.lst,passdb=nmap-passes.lst' -oN output.txt
+
+nmap -iL results.txt -sS -Pn -T4 --version-all -oA %h
