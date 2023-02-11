@@ -1,0 +1,245 @@
+# masscan.py
+
+import os
+
+print("Masscan Scanner")
+print("Select a scan option by entering the corresponding number:")
+print("1. Scan for Remote Desktop Protocol (RDP) servers")
+print("2. Scan for Simple Network Management Protocol (SNMP) servers")
+print("3. Scan for Internet Protocol (IP) cameras")
+print("4. Scan for Secure Shell (SSH) servers")
+print("5. Scan for virtual private network (VPN) servers")
+print("6. Scan for file transfer protocol (FTP) servers")
+print("7. Scan for network attached storage (NAS) devices")
+print("8. Scan for Telnet servers or routers")
+print("9. Scan the top 1000 ports")
+print("10. Scan for web servers")
+print("11. Scan for database servers")
+print("12. Scan for mail servers")
+print("13. Scan for virtualization hosts")
+print("14. Scan for printers")
+print("15. Scan for WP Sites")
+print("16. Scan for Docker Hosts")
+print("17. Scan for Industrial Control Units")
+print("99. This will exit the program")
+
+scan_choice = int(input("Enter your choice: "))
+
+if scan_choice == 1:
+    os.system("masscan 0.0.0.0/0 -p3389 --excludefile=exclude.txt --rate=10000 -oL scan_results/results_RDP.txt")
+elif scan_choice == 2:
+    os.system("masscan 0.0.0.0/0 -p161 --excludefile=exclude.txt --rate=10000 -oL scan_results/results_SNMP.txt")
+elif scan_choice == 3:
+    os.system("masscan 0.0.0.0/0 -p554 --excludefile=exclude.txt --rate=10000 -oL scan_results/results_IP_camera.txt")
+elif scan_choice == 4:
+    os.system("masscan 0.0.0.0/0 -p22 --excludefile=exclude.txt --rate=10000 -oL scan_results/results_SSH.txt")
+elif scan_choice == 5:
+    os.system("masscan 0.0.0.0/0 -p1723,1701 --excludefile=exclude.txt --rate=10000 -oL scan_results/results_VPN.txt")
+elif scan_choice == 6:
+    os.system("masscan 0.0.0.0/0 -p21 --excludefile=exclude.txt --rate=10000 -oL scan_results/results_FTP.txt")
+elif scan_choice == 7:
+    os.system("masscan 0.0.0.0/0 -p2049 --excludefile=exclude.txt --rate=10000 -oL scan_results/results_NAS.txt")
+elif scan_choice == 8:
+    os.system("masscan 0.0.0.0/0 -p23 --excludefile=exclude.txt --rate=10000 -oL scan_results/results_Telnet.txt")
+elif scan_choice == 9:
+    os.system("masscan --top-ports 1000 -oL scan_results/open_ports.txt --exclude-file exclude.txt 0.0.0.0/0")
+elif scan_choice == 10:
+    os.system("masscan --ports 80,443 -oL scan_results/web_servers.txt --exclude-file exclude.txt 0.0.0.0/0")
+elif scan_choice == 11:
+    os.system("masscan --ports 1433,3306 -oL scan_results/database_servers.txt --exclude-file exclude.txt 0.0.0.0/0")
+elif scan_choice == 12:
+    os.system("masscan --ports 25,110,143,465,587 -oL scan_results/mail_servers.txt --exclude-file exclude.txt 0.0.0.0/0")
+elif scan_choice == 13:
+    os.system("masscan --ports 5900,6633,902 -oL scan_results/virtualization_hosts.txt --exclude-file exclude.txt 0.0.0.0/0")
+elif scan_choice == 14:
+    os.system("masscan -p9100,515 --exclude-file exclude.txt 0.0.0.0/0 -oL scan_results/printers.txt")
+elif scan_choice == 15:
+    os.system("masscan --ports 80,443 --source-port 65535 --rate=1000 -oL scan_results/wp_sites.txt --exclude-file exclude.txt 0.0.0.0/0 --script "http-wordpress-enum.nse"")
+elif scan_choice == 16:
+    os.system("masscan --ports 2375 -oL scan_results/docker_hosts.txt --exclude-file exclude.txt 0.0.0.0/0")
+elif scan_choice == 17:
+    os.system("masscan 0.0.0.0/0 -p502 --excludefile=exclude.txt --rate=10000 -oL scan_results/results_industrial_control_units.txt")
+elif scan_choice == 99:
+    print("Quiting")
+else:
+    print("Invalid choice. Please select a number between 1 and 17.")
+
+
+**********************************************===============================================**********************************************
+
+# nmap.py
+
+import os
+
+def scan_type():
+    print(" Selecte a number below to preform a detailed scan using nmap ajinst a ip and port list and save the results ")
+    print("1. Web servers (ports 80, 443)")
+    print("2. Database servers (ports 1433, 3306)")
+    print("3. Mail servers (ports 25, 110, 143, 465, 587)")
+    print("4. Virtualization hosts (ports 5900, 6633, 902)")
+    print("5. Router Check for login")
+    print("6. Check for open WP sites")
+    print("7. Check for open printers")
+    print("8. Check for docker hosts")
+    print("9. Screenshot of service RDP")
+    print("10. Screenshot of service SNMP")
+    print("11. Screenshot of service Cameras")
+    print("12. Screenshot of service SSH")
+    print("13. Screenshot of service VPN")
+    print("14. Screenshot of service FTP")
+    print("15. Screenshot of service NAS")
+    print("16. Screenshot of industrial control units services")
+    print("17. Copmmon vulnerabilites for industrial control units services")
+    print("99. This will exit the program")
+    choice = input("Choose a scan type (1-1): ")
+    return choice
+
+def screenshot_RPD():
+    with open("scan_results/results_RPD.txt") as f:
+        for line in f:
+            ip, port = line.strip().split()
+            os.system(f"nmap -p {port} --script http-screenshot {ip} -oN screenshots/{ip}_{port}_screenshot.txt")
+
+def screenshot_SNMP():
+    with open("scan_results/results_SNMP.txt") as f:
+        for line in f:
+            ip, port = line.strip().split()
+            os.system(f"nmap -p {port} --script http-screenshot {ip} -oN screenshots/{ip}_{port}_screenshot.txt")
+
+def screenshot_Cameras():
+    with open("scan_results/results_IP_camera.txt") as f:
+        for line in f:
+            ip, port = line.strip().split()
+            os.system(f"nmap -p {port} --script http-screenshot {ip} -oN screenshots/{ip}_{port}_screenshot.txt")
+
+def screenshot_SSH():
+    with open("scan_results/results_SSH.txt") as f:
+        for line in f:
+            ip, port = line.strip().split()
+            os.system(f"nmap -p {port} --script http-screenshot {ip} -oN screenshots/{ip}_{port}_screenshot.txt")
+
+def screenshot_VPN():
+    with open("scan_results/results_VPN.txt") as f:
+        for line in f:
+            ip, port = line.strip().split()
+            os.system(f"nmap -p {port} --script http-screenshot {ip} -oN screenshots/{ip}_{port}_screenshot.txt")
+
+def screenshot_FTP():
+    with open("scan_results/results_FTP.txt") as f:
+        for line in f:
+            ip, port = line.strip().split()
+            os.system(f"nmap -p {port} --script http-screenshot {ip} -oN screenshots/{ip}_{port}_screenshot.txt")
+
+def screenshot_NAS():
+    with open("scan_results/results_NAS.txt") as f:
+        for line in f:
+            ip, port = line.strip().split()
+            os.system(f"nmap -p {port} --script http-screenshot {ip} -oN screenshots/{ip}_{port}_screenshot.txt")
+
+def screenshot_ICU():
+    with open("scan_results/results_industrial_control_units.txt") as f:
+        for line in f:
+            ip, port = line.strip().split()
+            os.system(f"nmap -p {port} --script http-screenshot {ip} -oN screenshots/{ip}_{port}_screenshot.txt")
+
+def web_servers():
+    os.system("nmap -sV -p 80,443 -iL scan_results/web_servers.txt -oN vuln/web_servers_detailed.txt")
+
+def database_servers():
+    os.system("nmap -sV -p 1433,3306 -iL scan_results/database_servers.txt -oN vuln/database_servers_detailed.txt")
+
+def mail_servers():
+    os.system("nmap -sV -p 25,110,143,465,587 -iL scan_results/mail_servers.txt -oN vuln/mail_servers_detailed.txt")
+
+def virtualization_hosts():
+    os.system("nmap -sV -p 5900,6633,902 -iL scan_results/virtualization_hosts.txt -oN vuln/virtualization_hosts_detailed.txt")
+
+def check_router_security():
+    os.system("nmap -sV --script "auth and safe" -iL scan_results/results_Telnet.txt -oN vuln/vulnerable_routers.txt")
+
+def check_wp_sites():
+    os.system("nmap --script=http-enum,http-waf-detect,http-sql-injection,http-vuln-cve-2014-0160 -iL scan_results/wp_sites.txt -p 80,443 -oN vuln/wp_sites.txt")
+
+def check_printers():
+    os.system("nmap -p9100,515 -iL scan_results/printers.txt --script printer-info,pjl-hp-laserjet-info,cups-info --script-args=unsafe=1 -oA vuln/printers_scan_results")
+
+def docker_version():
+    os.system("nmap -sV --script=docker-version -iL scan_results/docker_hosts.txt -oG vuln/open_dockers.txt")
+
+def vuln_ICU():
+    os.system("nmap -p 502 --script ics-vulnerabilities.nse -iL scan_results/industrial_control_units.txt" -oG vuln/open_ICUs.txt)
+
+if __name__ == "__main__":
+    choice = scan_type()
+    if choice == "1":
+        web_servers()
+    elif choice == "2":
+        database_servers()
+    elif choice == "3":
+        mail_servers()
+    elif choice == "4":
+        virtualization_hosts()
+    elif choice == "5":
+        check_router_security()
+    elif choice == "6":
+        check_wp_sites()
+    elif choice == "7":
+        check_printers()
+    elif choice == "8":
+        docker_version()
+    elif choice == "9":
+        screenshot_RDP()
+    elif choice == "10":
+        screenshot_SNMP()
+    elif choice == "11":
+        screenshot_Cameras()
+    elif choice == "12":
+        screenshot_SSH()
+    elif choice == "13":
+        screenshot_VPN()
+    elif choice == "14":
+        screenshot_FTP()
+    elif choice == "15":
+        screenshot_NAS()
+    elif choice == "16":
+        screenshot_ICU()
+    elif choice == "99":
+        print("Quitting")
+    else:
+        print("Invalid selection. Try again.")
+
+
+**********************************************===============================================**********************************************
+# setup.py
+
+import os
+import subprocess
+
+# Create the required folder structure
+if not os.path.exists("vuln"):
+    os.makedirs("vuln")
+
+if not os.path.exists("screenshots"):
+    os.makedirs("screenshots")
+
+if not os.path.exists("scan_results"):
+    os.makedirs("scan_results")
+
+# Check if the required tools are installed
+try:
+    import nmap
+    import masscan
+except ImportError:
+    # Install the required tools using pip
+    subprocess.call(["apt", "update"])
+    subprocess.call(["sudo", "apt", "upgrade", "-y"])
+    subprocess.call(["sudo", "apt", "install", "-y", "masscan"])
+    subprocess.call(["sudo", "apt", "install", "-y", "nmap"])
+
+# Download the exclude.conf file
+os.system("curl -LJO https://github.com/robertdavidgraham/masscan/raw/master/data/exclude.conf")
+os.rename("exclude.conf", "exclude.txt")
+
+
+**********************************************===============================================**********************************************
+
